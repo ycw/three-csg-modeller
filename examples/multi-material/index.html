@@ -42,18 +42,20 @@
         camera.position.set(2, 1, 2);
         controls.autoRotate = true;
 
+        scene.add(new THREE.HemisphereLight("white", "powderblue"));
+
         const meshA = new THREE.Mesh(
             new THREE.SphereBufferGeometry(0.8),
             new THREE.MeshNormalMaterial()
         );
 
         const meshB = new THREE.Mesh(new THREE.BoxBufferGeometry(), [
-            new THREE.MeshBasicMaterial({ color: "red" }),
-            new THREE.MeshBasicMaterial({ color: "lime" }),
-            new THREE.MeshBasicMaterial({ color: "blue" }),
-            new THREE.MeshBasicMaterial({ color: "cyan" }),
-            new THREE.MeshBasicMaterial({ color: "magenta" }),
-            new THREE.MeshBasicMaterial({ color: "yellow" }),
+            new THREE.MeshLambertMaterial({ color: "red" }),
+            new THREE.MeshLambertMaterial({ color: "lime" }),
+            new THREE.MeshLambertMaterial({ color: "blue" }),
+            new THREE.MeshLambertMaterial({ color: "cyan" }),
+            new THREE.MeshLambertMaterial({ color: "magenta" }),
+            new THREE.MeshLambertMaterial({ color: "yellow" }),
         ]);
 
         const modeller = new Modeller(THREE);
