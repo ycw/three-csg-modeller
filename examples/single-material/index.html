@@ -42,7 +42,7 @@
         camera.position.set(2, 1, 2);
         controls.autoRotate = true;
 
-        const mat = new THREE.MeshNormalMaterial();
+        const mat = new THREE.MeshDepthMaterial();
         const meshA = new THREE.Mesh(new THREE.SphereBufferGeometry(0.8), mat);
         const meshB = new THREE.Mesh(new THREE.BoxBufferGeometry(), mat);
 
