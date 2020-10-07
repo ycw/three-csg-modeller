@@ -1,16 +1,16 @@
 # About
 
-A modeller helps to modeling solid mesh for three.js.
+A modeller helps to modeling solid mesh for three.js. 
 
-## Details
+It supports vertex color and multi-material.
 
-- Support vertex color.
-- Support multi-material.
-- Using buffer geometry.
+It uses `BufferGeometry` directly.
 
 ## Examples
 
-TODO
+- [Single material](https://ycw.github.io/three-csg-modeller/examples/single-material)
+- [Multi material](https://ycw.github.io/three-csg-modeller/examples/multi-material)
+- [Transform model]((https://ycw.github.io/three-csg-modeller/examples/transform-model))
 
 ## Installation
 
