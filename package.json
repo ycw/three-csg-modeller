@@ -1,0 +1,26 @@
+{
+    "name": "three-csg-modeller",
+    "version": "0.1.0",
+    "description": "Solid mesh modeling for three.js",
+    "author": "ycw (https://github.com/ycw)",
+    "main": "src/index.js",
+    "type": "module",
+    "scripts": {
+        "build:csg": "terser --source-map -c -m -o lib/csg.js lib/csg.max.js"
+    },
+    "peerDependencies": {
+        "three": ">= 0.120.0"
+    },
+    "license": "MIT",
+    "keywords": [
+        "CSG",
+        "modeling"
+    ],
+    "devDependencies": {
+        "terser": "^5.3.4"
+    },
+    "files": [
+        "lib",
+        "src"
+    ]
+}
