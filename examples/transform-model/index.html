@@ -51,6 +51,7 @@
             const mesh = new THREE.Mesh(new THREE.CylinderBufferGeometry(0.5, 0.5, 1, 64, 1), mat);
             const outer = modeller.model(mesh);
 
+            // Mesh-level transformation only affects subsequent model creation.
             mesh.scale.set(0.4, 1.0, 0.4);
             const inner = modeller.model(mesh);
             
@@ -69,6 +70,7 @@
             cutterMesh.position.set(0, 0, 0.4);
             const cutter = modeller.model(cutterMesh);
 
+            // Transform a model by a matrix. ( `model.applyMatrix4` returns a new Model )
             const matrix = new THREE.Matrix4().makeTranslation(0.1, 0, -0.025);
             paperModel = outer.subtract(inner).subtract(cutter).applyMatrix4(matrix);
         }
