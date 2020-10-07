@@ -10,7 +10,7 @@ It uses `BufferGeometry` directly.
 
 - [Single material](https://ycw.github.io/three-csg-modeller/examples/single-material)
 - [Multi material](https://ycw.github.io/three-csg-modeller/examples/multi-material)
-- [Transform model]((https://ycw.github.io/three-csg-modeller/examples/transform-model))
+- [Transform model](https://ycw.github.io/three-csg-modeller/examples/transform-model)
 
 ## Installation
 
