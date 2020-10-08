@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf8">
-    <title>Transform Model</title>
+    <title>Gallery Frame</title>
     <link rel="icon" href="#">
     <link rel="stylesheet" href="../index.css">
 </head>
@@ -39,42 +39,25 @@
         // Main
         // ----
 
+        scene.background = new THREE.Color("white");
         camera.position.set(2, 1, 2);
         controls.autoRotate = true;
         scene.add(new THREE.HemisphereLight("white", "powderblue"));
 
         const modeller = new Modeller(THREE);
-        const mat = new THREE.MeshLambertMaterial();
 
-        let bodyModel;
-        {
-            const mesh = new THREE.Mesh(new THREE.CylinderBufferGeometry(0.5, 0.5, 1, 64, 1), mat);
-            const outer = modeller.model(mesh);
-
-            // Mesh-level transformation only affects subsequent model creation.
-            mesh.scale.set(0.4, 1.0, 0.4);
-            const inner = modeller.model(mesh);
-            
-            bodyModel = outer.subtract(inner);
-        }
+        const frame = new THREE.Mesh(
+            new THREE.BoxBufferGeometry(1, 2, 0.1),
+            new THREE.MeshLambertMaterial({ color: "black" })
+        );
         
-        let paperModel;
-        { 
-            const mesh = new THREE.Mesh(new THREE.CylinderBufferGeometry(0.5, 0.5, 1, 64, 1), mat);
-            const outer = modeller.model(mesh);
- 
-            mesh.scale.set(0.97, 1.0, 0.97);
-            const inner = modeller.model(mesh);
+        const board = new THREE.Mesh(
+            new THREE.BoxBufferGeometry(0.9, 1.8, 0.1),
+            new THREE.MeshLambertMaterial({ color: "white" })
+        );
+        board.position.set(0, 0, 0.05);
 
-            const cutterMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(10, 1, 1), mat);
-            cutterMesh.position.set(0, 0, 0.4);
-            const cutter = modeller.model(cutterMesh);
-
-            // Transform a model by a matrix. ( `model.applyMatrix4` returns a new Model )
-            const matrix = new THREE.Matrix4().makeTranslation(0.1, 0, -0.025);
-            paperModel = outer.subtract(inner).subtract(cutter).applyMatrix4(matrix);
-        }
-
-        scene.add(bodyModel.union(paperModel).build());
+        const model = modeller.model(frame).subtract(modeller.model(board));
+        scene.add(model.build());
     </script>
 </body>
