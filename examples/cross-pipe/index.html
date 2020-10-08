@@ -40,28 +40,63 @@
         // ----
 
         scene.background = new THREE.Color("white");
-        camera.position.set(2, 1, 2);
+        camera.position.set(5, 5, 5);
         controls.autoRotate = true;
         scene.add(new THREE.HemisphereLight("white", "powderblue"));
 
+        // +----
+        // Demo: Re-assigning `mesh.material` doesn't affect already-created models
+        // which using this mesh. But, mutating likes `mesh.material.color.set()` does.  
+        // +----
+
         const mesh = new THREE.Mesh(
-            new THREE.CylinderBufferGeometry(0.5, 0.5, 1.5),
-            new THREE.MeshLambertMaterial({ color: "lime" })
+            new THREE.CylinderBufferGeometry(1, 1, 3),
+            new THREE.MeshLambertMaterial({ color: "blue" })
         );
 
         const modeller = new Modeller(THREE);
-        const solidV = modeller.model(mesh); // A
-        mesh.rotation.x = Math.PI/2;
-        const solidH = modeller.model(mesh); // B
-        const solid = solidV.union(solidH); // A | B ... C 
+       
+        // ----
+        // Part 1: Make outer cross pipe model. (in blue)
+        // ----
 
-        mesh.scale.set(0.8, 1, 0.8);
-        const innerSolidH = modeller.model(mesh); // D
-        mesh.rotation.x = 0;
-        const innerSolidV = modeller.model(mesh); // E
-        const innerSolid = innerSolidH.union(innerSolidV); // D | E ... F
+        // A upright cylinder model.
+        const modelVerticalPipeOuter = modeller.model(mesh);
 
-        const pipe = solid.subtract(innerSolid); // C - F
-        scene.add(pipe.build());
+        // A horizontal cylinder model.
+        mesh.rotation.z = Math.PI / 2;
+        const modelHorizontalPipeOuter = modeller.model(mesh);
+
+        // A cross pipe solid model.
+        const modelCrossPipeOuter = modelVerticalPipeOuter.union(modelHorizontalPipeOuter);
+
+        // ----
+        // Part 2: Make inner cross pipe model. (in red)
+        // ----
+
+        // Change mesh material. Note that we are **re-assigning** a new material 
+        // to mesh, s.t. this modification only affects subsequent models.
+        mesh.material = new THREE.MeshLambertMaterial({ color: "red" });
+
+        // A upright down-scaled cylinder model.
+        mesh.rotation.z = 0;
+        mesh.scale.set(0.9, 1.0, 0.9);
+        const modelVerticalPipeInner = modeller.model(mesh);
+
+        // A horizontal down-scaled cylinder model.
+        mesh.rotation.z = Math.PI / 2;
+        const modelHorizontalPipeInner = modeller.model(mesh);
+
+        // A down-scaled cross pipe model.
+        const modelCrossPipeInner = modelVerticalPipeInner.union(modelHorizontalPipeInner);
+
+        // ----
+        // Part 3: Subtract outer from inner.
+        // ----
+
+        const modelCrossPipe = modelCrossPipeOuter.subtract(modelCrossPipeInner);
+
+        // Build mesh and add it to scene.
+        scene.add(modelCrossPipe.build());
     </script>
 </body>
