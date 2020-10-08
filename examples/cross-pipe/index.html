@@ -51,13 +51,13 @@
 
         const mesh = new THREE.Mesh(
             new THREE.CylinderBufferGeometry(1, 1, 3),
-            new THREE.MeshLambertMaterial({ color: "blue" })
+            new THREE.MeshLambertMaterial({ color: "black" })
         );
 
         const modeller = new Modeller(THREE);
        
         // ----
-        // Part 1: Make outer cross pipe model. (in blue)
+        // Part 1: Make outer cross pipe model. (in black)
         // ----
 
         // A upright cylinder model.
@@ -71,12 +71,12 @@
         const modelCrossPipeOuter = modelVerticalPipeOuter.union(modelHorizontalPipeOuter);
 
         // ----
-        // Part 2: Make inner cross pipe model. (in red)
+        // Part 2: Make inner cross pipe model. (in white)
         // ----
 
         // Change mesh material. Note that we are **re-assigning** a new material 
         // to mesh, s.t. this modification only affects subsequent models.
-        mesh.material = new THREE.MeshLambertMaterial({ color: "red" });
+        mesh.material = new THREE.MeshLambertMaterial({ color: "white" });
 
         // A upright down-scaled cylinder model.
         mesh.rotation.z = 0;
