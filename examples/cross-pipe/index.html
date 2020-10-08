@@ -45,8 +45,7 @@
         scene.add(new THREE.HemisphereLight("white", "powderblue"));
 
         // +----
-        // Demo: Re-assigning `mesh.material` doesn't affect already-created models
-        // which using this mesh. But, mutating likes `mesh.material.color.set()` does.  
+        // Demo: Re-assigning `mesh.material` will influence subsequent models only. 
         // +----
 
         const mesh = new THREE.Mesh(
@@ -56,47 +55,28 @@
 
         const modeller = new Modeller(THREE);
        
-        // ----
-        // Part 1: Make outer cross pipe model. (in black)
-        // ----
-
-        // A upright cylinder model.
+        // Make outer cross pipe model. (in black)
         const modelVerticalPipeOuter = modeller.model(mesh);
-
-        // A horizontal cylinder model.
         mesh.rotation.z = Math.PI / 2;
         const modelHorizontalPipeOuter = modeller.model(mesh);
-
-        // A cross pipe solid model.
         const modelCrossPipeOuter = modelVerticalPipeOuter.union(modelHorizontalPipeOuter);
 
-        // ----
-        // Part 2: Make inner cross pipe model. (in white)
-        // ----
-
         // Change mesh material. Note that we are **re-assigning** a new material 
-        // to mesh, s.t. this modification only affects subsequent models.
+        // to mesh, this will only affect subsequent models. If we mutate material 
+        // property instead, e.g. `mesh.material.color.set("white")`, then this WILL 
+        // influences models which had been already created.
         mesh.material = new THREE.MeshLambertMaterial({ color: "white" });
-
-        // A upright down-scaled cylinder model.
+        
+        // Make inner cross pipe model. (in white)
         mesh.rotation.z = 0;
         mesh.scale.set(0.9, 1.0, 0.9);
         const modelVerticalPipeInner = modeller.model(mesh);
-
-        // A horizontal down-scaled cylinder model.
         mesh.rotation.z = Math.PI / 2;
         const modelHorizontalPipeInner = modeller.model(mesh);
-
-        // A down-scaled cross pipe model.
         const modelCrossPipeInner = modelVerticalPipeInner.union(modelHorizontalPipeInner);
 
-        // ----
-        // Part 3: Subtract outer from inner.
-        // ----
-
+        // Union models.
         const modelCrossPipe = modelCrossPipeOuter.subtract(modelCrossPipeInner);
-
-        // Build mesh and add it to scene.
         scene.add(modelCrossPipe.build());
     </script>
 </body>
