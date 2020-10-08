@@ -1,0 +1,85 @@
+<!doctype html>
+
+<head>
+    <meta charset="utf8">
+    <title>Extrude Inwards</title>
+    <link rel="icon" href="#">
+    <link rel="stylesheet" href="../index.css">
+</head>
+
+<body>
+    <script type="module">
+        import * as THREE from "https://unpkg.com/three@0.121.1/build/three.module.js"
+        import { OrbitControls } from "https://unpkg.com/three@0.121.1/examples/jsm/controls/OrbitControls"
+        import Modeller from "../../src/index.js";
+
+        // ----
+        // Boot
+        // ----
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, 2, .1, 100);
+        const controls = new OrbitControls(camera, renderer.domElement);
+        window.addEventListener('resize', () => {
+            const { clientWidth, clientHeight } = renderer.domElement;
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(clientWidth, clientHeight, false);
+            camera.aspect = clientWidth / clientHeight;
+            camera.updateProjectionMatrix();
+        });
+        document.body.prepend(renderer.domElement);
+        window.dispatchEvent(new Event('resize'));
+        renderer.setAnimationLoop(() => {
+            renderer.render(scene, camera);
+            controls.update();
+        });
+
+        // ----
+        // Main
+        // ----
+
+        scene.background = new THREE.Color("white");
+        camera.position.set(2, 1, 2);
+        controls.autoRotate = true;
+
+        // +----
+        // Demo: Extrude inwards; correcting uvs by only using set operation methods.
+        // Note that these methods are not commutative. The resulting geometry of 
+        // `A.union(B)` and `B.union(A)` is same, but resulting vertex data are different.
+        // +----
+
+        // Create video textured material which will be applied to +z faces.
+        const video = document.createElement("video");
+        video.src = "pexels-anastasia-shuraeva-5501730.mp4";
+        video.muted = true;
+        video.loop = true;
+        video.play();
+        const videoMat = new THREE.MeshBasicMaterial({ map: new THREE.VideoTexture(video) });
+
+        // Create normal material.
+        const normalMat = new THREE.MeshNormalMaterial();
+
+        // Create box mesh.
+        const boxMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(), [
+            normalMat, normalMat,
+            normalMat, normalMat,
+            videoMat, normalMat,
+        ]);
+
+        // Create models.
+        const modeller = new Modeller(THREE);
+        const model0 = modeller.model(boxMesh);
+        boxMesh.position.set(0.5, 0.5, 0.5);
+        const model1 = modeller.model(boxMesh);
+        const model2 = model0.intersect(model1);
+        const model3 = model0.subtract(model2);
+        const model2b = model2.applyMatrix4(new THREE.Matrix4().makeTranslation(0.0, 0.0, -0.5));
+        const model4 = model2b.union(model3); 
+
+        // Build mesh.
+        const mesh = model4.build();
+        mesh.scale.set(1, 16 / 9, 1);
+        scene.add(mesh);
+    </script>
+</body>
