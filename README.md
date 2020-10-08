@@ -18,7 +18,7 @@ terms of vertex data. I use this "feature" to correct faces uvs w/o touching
 single bit of `attributes.uv.array`. 
 - [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame) 
 A bare multi-material example.
-- [Gradient Color](https://ycw.github.io/three-csg-modeller/examples/extrude-color) 
+- [Gradient Color](https://ycw.github.io/three-csg-modeller/examples/gradient-color) 
 A bare vertex color example.
 
 ## Installation
