@@ -39,25 +39,29 @@
         // Main
         // ----
 
-        scene.background = new THREE.Color("white");
         camera.position.set(2, 1, 2);
         controls.autoRotate = true;
+        
+        scene.background = new THREE.Color("white");
         scene.add(new THREE.HemisphereLight("white", "powderblue"));
 
         const modeller = new Modeller(THREE);
 
-        const frame = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(1, 2, 0.1),
-            new THREE.MeshLambertMaterial({ color: "black" })
-        );
-        
-        const board = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(0.9, 1.9, 0.1),
-            new THREE.MeshLambertMaterial({ color: "white" })
-        );
-        board.position.set(0, 0, 0.05);
+        const mat0 = new THREE.MeshLambertMaterial({ color: "black" });
+        const mat1 = new THREE.MeshLambertMaterial({ color: "white" });
 
-        const model = modeller.model(frame).subtract(modeller.model(board));
+        const outer = new THREE.Mesh(
+            new THREE.BoxBufferGeometry(1, 2, 0.1), 
+            mat0
+        );
+
+        const inner = new THREE.Mesh(
+            new THREE.BoxBufferGeometry(0.9, 1.9, 0.1),
+            [mat0, mat0, mat0, mat0, mat1, mat1]
+        );
+        inner.position.set(0, 0, 0.05);
+
+        const model = modeller.model(outer).subtract(modeller.model(inner));
         scene.add(model.build());
     </script>
 </body>
