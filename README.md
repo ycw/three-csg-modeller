@@ -5,8 +5,7 @@ A modeller helps to modeling solid mesh for three.js.
 ## Featrues
 
 - Manipulate `BufferGeometry` directly.
-- Vertex color. (TODO, add ex)
-- Multi-material. (TODO, add ex)
+- Support vertex color and mutlimaterial.
 - Dump clean mesh.
 
 ## Examples
@@ -58,10 +57,10 @@ const mesh = hollow.build();
 ### `Modeller`
 
 `.model(mesh)`
-- Create and return a new `Model` instance from a mesh.
+- Construct a model from `mesh`, return a `Model` instance.
 - Input `mesh` must hold a `BufferGeometry` instead of `Geometry`. That 
   `BufferGeometry` must contain attribute `position` and may optionally
-  includes attributes `normal`, `uv` and `color`. 
+  include attributes `normal`, `uv` and `color`. 
 - Both indexed and non-indexed buffer geometry are supported.
 - Multi-material is supported.
 
