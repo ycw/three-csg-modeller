@@ -139,9 +139,9 @@ function csgToMesh(THREE, csg) {
     let colorsIdx = 0;
     let materialIndex = 0;
 
-    let hasNormal = false, allHasNormal = false;
-    let hasUv = false, allHasUv = false;
-    let hasColor = false, allHasColor = false;
+    let hasNormal = false, allHasNormal = true;
+    let hasUv = false, allHasUv = true;
+    let hasColor = false, allHasColor = true;
 
     const indices = []; // holding actual data of element index buffer
     let index = 0; // index number already used
@@ -165,15 +165,15 @@ function csgToMesh(THREE, csg) {
                 positions.set([pos.x, pos.y, pos.z], positionsIdx);
                 positionsIdx += 3;
 
-                allHasNormal |= (hasNormal = normal !== null);
+                allHasNormal &= (hasNormal = normal !== null);
                 normals.set(hasNormal ? [normal.x, normal.y, normal.z] : [0, 0, 0], normalsIdx);
                 normalsIdx += 3;
 
-                allHasUv |= (hasUv = uv !== null);
+                allHasUv &= (hasUv = uv !== null);
                 uvs.set(hasUv ? uv.toArray() : [0, 0], uvsIdx);
                 uvsIdx += 2;
 
-                allHasColor |= (hasColor = color !== null);
+                allHasColor &= (hasColor = color !== null);
                 colors.set(hasColor ? [color.x, color.y, color.z] : [0, 0, 0], colorsIdx);
                 colorsIdx += 3;
             }
