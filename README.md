@@ -81,8 +81,7 @@ const mesh = hollow.build();
 
 `model.build()`
 - Build a `Mesh` from model. The mesh holds a "indexed" `BufferGeoemtry`, its
-  render groups have been grouped by materials; unused materials are plucked; 
-  orphan group is eliminated. 
+  render groups have been grouped by materials; unused materials are plucked.
 
 ## Credits
 
