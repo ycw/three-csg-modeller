@@ -30,26 +30,17 @@ import Modeller from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.0/s
 ## Usage
 
 ```js
-// Construct a modeller.
 const modeller = new Modeller(THREE);
-
-// Create a model.
-const sphere = modeller.model(new THREE.Mesh(
+const sphereModel = modeller.model(new THREE.Mesh(
     new THREE.SphereBufferGeometry(1),
     new THREE.MeshBasicMaterial({ color: "red" })
 ));
-
-// Create another model.
-const box = modeller.model(new THREE.Mesh(
+const boxModel = modeller.model(new THREE.Mesh(
     new THREE.BoxBufferGeometry(1, 1, 2),
     new THREE.MeshBasicMaterial({ color: "blue" })
 ));
-
-// Subtract a sphere model from a box model.
-const hollow = sphere.subtract(box);
-
-// Build a mesh from a model.
-const mesh = hollow.build();
+const model = sphereModel.subtract(boxModel);
+const mesh = model.build();
 ```
 
 ## API
@@ -66,20 +57,20 @@ const mesh = hollow.build();
 
 ### `Model`
 
-`modelA.union(modelB)`
-- Returns a new model holding result of modelA `|` modelB.
+`.union(modelB)`
+- Returns a new model holding result of this model `|` modelB.
 
-`modelA.subtract(modelB)`
-- Returns a new model holding result of modelA `-` modelB.
+`.subtract(modelB)`
+- Returns a new model holding result of this model `-` modelB.
 
-`modelA.intersect(modelB)`
-- Returns a new model holding result of modelA `&` modelB.
+`.intersect(modelB)`
+- Returns a new model holding result of this model `&` modelB.
 
-`model.applyMatrix4(matrix)` 
+`.applyMatrix4(matrix)` 
 - Returns a new model holding the transformed one. 
-- `model` remains unchanged.
+- This model remains unchanged.
 
-`model.build()`
+`.build()`
 - Build a `Mesh` from model. The mesh holds a "indexed" `BufferGeoemtry`, its
   render groups have been grouped by materials; unused materials are plucked.
 
