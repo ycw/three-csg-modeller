@@ -49,8 +49,14 @@ function meshToModel(THREE, mesh) {
 
 function meshToPolygons(THREE, mesh) {
 
-    mesh = mesh.clone();
-    mesh.updateMatrix();
+    // Compute transformation matrix.
+    const clone = mesh.clone();
+    clone.updateMatrix();
+
+    // Snapshot material array.
+    if (Array.isArray(mesh.material)) {
+        clone.material = Array.from(mesh.material);
+    }
 
     const polygons = [];
     const geom = mesh.geometry;
@@ -64,17 +70,26 @@ function meshToPolygons(THREE, mesh) {
     const colors = hasColorAttrib ? color.array : null;
     const indexAttrib = geom.index;
     const elemCount = indexAttrib ? indexAttrib.count : positions.length / 3;
-    const shouldApplyMatrix = !mesh.matrix.equals(new THREE.Matrix4());
+    const shouldApplyMatrix = !clone.matrix.equals(new THREE.Matrix4());
 
-    for (let elemIdx = 0; elemIdx < elemCount; elemIdx += 3) {
+    for (let elemIdx = 0, $3i = 0, $3i3 = 0; elemIdx < elemCount; elemIdx += 3) {
         const vertices = [];
         for (let j = 0; j < 3; ++j) {
             const i = (indexAttrib === null) ? elemIdx + j : indexAttrib.array[elemIdx + j];
-            const position = new THREE.Vector3().fromArray(positions, 3 * i);
-            shouldApplyMatrix && position.applyMatrix4(mesh.matrix);
-            const normal = hasNormalAttrib ? normals.slice(3 * i, 3 * (i + 1)) : null;
-            const uv = hasUvAttrib ? new THREE.Vector2().fromArray(uvs, 2 * i) : null;
-            const color = hasColorAttrib ? colors.slice(3 * i, 3 * (i + 1)) : null;
+            $3i = 3 * i;
+            $3i3 = $3i + 3;
+            const position = shouldApplyMatrix
+                ? new THREE.Vector3().fromArray(positions, $3i).applyMatrix4(clone.matrix)
+                : positions.subarray($3i, $3i3);
+            const normal = hasNormalAttrib
+                ? normals.subarray($3i, $3i3)
+                : null;
+            const uv = hasUvAttrib
+                ? new THREE.Vector2().fromArray(uvs, 2 * i)
+                : null;
+            const color = hasColorAttrib
+                ? colors.subarray($3i, $3i3)
+                : null;
             vertices.push(new CSG.Vertex(position, normal, uv, color));
         }
 
@@ -86,7 +101,7 @@ function meshToPolygons(THREE, mesh) {
             }
         }
 
-        polygons.push(new CSG.Polygon(vertices, { mesh, mI }));
+        polygons.push(new CSG.Polygon(vertices, { m: clone.material, mI }));
     }
 
     return polygons;
@@ -99,18 +114,14 @@ function csgToMesh(THREE, csg) {
 
     let vertsCount = 0;
     const matMap = new Map();
-    for (const { vertices, shared: { mI, mesh: { material } } } of polygons) {
-        const mat = Array.isArray(material) ? material[mI] : material;
+    for (const { vertices, shared: { m, mI } } of polygons) {
+        const mat = Array.isArray(m) ? m[mI] : m;
         matMap.has(mat) || matMap.set(mat, []);
         matMap.get(mat).push(vertices);
         vertsCount += vertices.length;
     }
 
-    // Populate buffer attributes.
-    // - Erase non-used buffer attributes at final step.
-    // - Only buffer attribute `position` is required.
-    // Cleanup `geom.groups` and `mesh.material` at final step.
-    // - Strip orphan group out and use non-array `mesh.material` 
+    // Alloc typedarrays to hold buffer attributes data.
 
     const positions = new Float32Array(vertsCount * 3);
     const normals = new Float32Array(vertsCount * 3);
@@ -128,41 +139,46 @@ function csgToMesh(THREE, csg) {
     let colorsIdx = 0;
     let materialIndex = 0;
 
-    let hasNormal = false;
-    let hasUv = false;
-    let hasColor = false;
+    let hasNormal = false, allHasNormal = false;
+    let hasUv = false, allHasUv = false;
+    let hasColor = false, allHasColor = false;
 
     const indices = []; // holding actual data of element index buffer
     let index = 0; // index number already used
 
     for (const [material, vertsArray] of matMap.entries()) {
+
+        // Indice count. Since `vertesArray[n]` holds triangle fan verts 
+        // if it has 4 verts, indice count should += 6 (2 tris).
         count = 0;
         for (const verts of vertsArray) {
-            // ---- Populate indices
+            
+            // Populate indices
             for (let i = 1, I = verts.length - 1; i < I; ++i) {
                 indices.push(index, index + i, index + i + 1);
             }
             index += verts.length;
-            // ---- Populate attributes
+            count += (verts.length - 2) * 3;
+
+            // Populate buffer attributes
             for (const { pos, normal, uv, color } of verts) {
                 positions.set([pos.x, pos.y, pos.z], positionsIdx);
                 positionsIdx += 3;
 
-                hasNormal |= normal !== null;
-                normals.set(normal ? [normal.x, normal.y, normal.z] : [0, 0, 0], normalsIdx);
+                allHasNormal |= (hasNormal = normal !== null);
+                normals.set(hasNormal ? [normal.x, normal.y, normal.z] : [0, 0, 0], normalsIdx);
                 normalsIdx += 3;
 
-                hasUv |= uv !== null;
-                uvs.set(uv ? uv.toArray() : [0, 0], uvsIdx);
+                allHasUv |= (hasUv = uv !== null);
+                uvs.set(hasUv ? uv.toArray() : [0, 0], uvsIdx);
                 uvsIdx += 2;
 
-                hasColor |= color !== null;
-                colors.set(color ? [color.x, color.y, color.z] : [0, 0, 0], colorsIdx);
+                allHasColor |= (hasColor = color !== null);
+                colors.set(hasColor ? [color.x, color.y, color.z] : [0, 0, 0], colorsIdx);
                 colorsIdx += 3;
             }
-            // ---- Accumulate indices count
-            count += (verts.length - 2) * 3;
         }
+
         materials.push(material);
         geom.addGroup(start, count, materialIndex);
         start += count;
@@ -179,24 +195,16 @@ function csgToMesh(THREE, csg) {
 
     geom.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
-    if (hasNormal) {
+    if (allHasNormal) {
         geom.setAttribute("normal", new THREE.BufferAttribute(normals, 3));
     }
 
-    if (hasUv) {
+    if (allHasUv) {
         geom.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
     }
 
-    if (hasColor) {
+    if (allHasColor) {
         geom.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    }
-
-    // Strip orphan group out.
-
-    if (geom.groups.length === 1) {
-        const material = materials[geom.groups[0].materialIndex];
-        geom.groups.length = 0;
-        return new THREE.Mesh(geom, material);
     }
 
     return new THREE.Mesh(geom, materials);
