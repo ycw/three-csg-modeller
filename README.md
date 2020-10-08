@@ -1,6 +1,6 @@
 # About
 
-A modeller helps to modeling solid mesh for three.js. 
+Solid mesh modeling for three.js.
 
 ## Featrues
 
