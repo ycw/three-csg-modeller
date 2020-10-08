@@ -41,27 +41,39 @@
 
         camera.position.set(2, 1, 2);
         controls.autoRotate = true;
-        
+
         scene.background = new THREE.Color("white");
         scene.add(new THREE.HemisphereLight("white", "powderblue"));
 
-        const modeller = new Modeller(THREE);
+        // +----
+        // Demo how to subtract a single-material mesh from a multi-material mesh.
+        // +----
 
         const mat0 = new THREE.MeshLambertMaterial({ color: "black" });
         const mat1 = new THREE.MeshLambertMaterial({ color: "white" });
 
-        const outer = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(1, 2, 0.1), 
-            mat0
-        );
+        // A single-material mesh.
+        const meshS = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 2, 0.1), mat0);
 
-        const inner = new THREE.Mesh(
+        // A multi-material mesh.
+        const meshM = new THREE.Mesh(
             new THREE.BoxBufferGeometry(0.9, 1.9, 0.1),
             [mat0, mat0, mat0, mat0, mat1, mat1]
         );
-        inner.position.set(0, 0, 0.05);
 
-        const model = modeller.model(outer).subtract(modeller.model(inner));
-        scene.add(model.build());
+        // Offset multi-material mesh a little bit.
+        meshM.position.set(0, 0, 0.05);
+
+        // Now create models.
+        const modeller = new Modeller(THREE);
+        const modelS = modeller.model(meshS); 
+        const modelM = modeller.model(meshM);
+
+        // Subtract a model from another model.
+        const model = modelS.subtract(modelM);
+
+        // Build mesh and add it to scene.
+        const mesh = model.build(); 
+        scene.add(mesh);
     </script>
 </body>
