@@ -1,0 +1,82 @@
+<!doctype html>
+
+<head>
+    <meta charset="utf8">
+    <title>Vertex Color</title>
+    <link rel="icon" href="#">
+    <link rel="stylesheet" href="../index.css">
+</head>
+
+<body>
+    <script type="module">
+        import * as THREE from "https://unpkg.com/three@0.121.1/build/three.module.js"
+        import { OrbitControls } from "https://unpkg.com/three@0.121.1/examples/jsm/controls/OrbitControls"
+        import Modeller from "../../src/index.js";
+
+        // ----
+        // Boot
+        // ----
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, 2, .1, 100);
+        const controls = new OrbitControls(camera, renderer.domElement);
+        window.addEventListener('resize', () => {
+            const { clientWidth, clientHeight } = renderer.domElement;
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(clientWidth, clientHeight, false);
+            camera.aspect = clientWidth / clientHeight;
+            camera.updateProjectionMatrix();
+        });
+        document.body.prepend(renderer.domElement);
+        window.dispatchEvent(new Event('resize'));
+        renderer.setAnimationLoop(() => {
+            renderer.render(scene, camera);
+            controls.update();
+        });
+
+        // ----
+        // Main
+        // ----
+
+        camera.position.set(2, 1, 2);
+        controls.autoRotate = true;
+        scene.background = new THREE.Color("white");
+
+        // +----
+        // Demo: use vertex colors.
+        // +----
+
+        const colors = new Float32Array(4 * 6 * 3); // 6faces @4verts @3comps
+        // [0, 8) -> red(n,0,0) ... ... +x -x faces are red-ish
+        // [8, 16) -> lime(0,n,0) ... ... +y -y faces are green-ish 
+        // [16, 24) -> blue(0,0,n) ... ... +z -z faces are blue-ish
+        for (let i = 0, I = colors.length / 3; i < I; ++i) {
+            colors[i * 3] = (i < 8) ? Math.abs(i / 8 - 0.5) * 2 : 0;
+            colors[i * 3 + 1] = (i >= 8 && i < 16) ? Math.abs((i - 8) / 8 - 0.5) * 2 : 0;
+            colors[i * 3 + 2] = (i >= 16 && i < 24) ? Math.abs((i - 16) / 8 - 0.5) * 2 : 0;
+        }
+
+        // A mesh with geom attribute `color` and `vertexColors` is set to true.
+        const geom0 = new THREE.BoxBufferGeometry();
+        geom0.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+        const mat0 = new THREE.MeshBasicMaterial({ vertexColors: true });
+        const mesh0 = new THREE.Mesh(geom0, mat0);
+        
+        // A mesh without geom attribute `color` but `vertexColors` is set to true.  
+        const geom1 = new THREE.BoxBufferGeometry();
+        const mat1 = new THREE.MeshBasicMaterial({ vertexColors: true });
+        const mesh1 = new THREE.Mesh(geom1, mat1);
+        mesh1.scale.set(0.5, 0.5, 1);
+
+        // Create models.
+        const modeller = new Modeller(THREE);
+        const model0 = modeller.model(mesh0); 
+        const model1 = modeller.model(mesh1); 
+        const model = model0.subtract(model1);
+       
+        // Result mesh should have gradient-color outer faces and solid black inner faces.
+        const result = model.build();
+        scene.add(result);
+    </script>
+</body>
