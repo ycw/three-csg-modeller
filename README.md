@@ -23,7 +23,7 @@ A bare vertex color example.
 
 ## Installation
 
-Via npm ( `npm i ycw/three-csg-modeller#v0.1.3` )
+Via npm ( `npm i ycw/three-csg-modeller#v0.1.4` )
 
 ```js
 import Modeller from "three-csg-modeller"
@@ -32,7 +32,7 @@ import Modeller from "three-csg-modeller"
 Via cdn
 
 ```js
-import Modeller from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.3/src/index.js"
+import Modeller from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.4/src/index.js"
 ```
 
 ## Usage
@@ -59,9 +59,7 @@ const mesh = model.build();
 - Construct a model from `mesh`, return a `Model` instance.
 - Input `mesh` must hold a `BufferGeometry` instead of `Geometry`. That 
   `BufferGeometry` must contain attribute `position` and may optionally
-  include attributes `normal`, `uv` and `color`. 
-- Both indexed and non-indexed buffer geometry are supported.
-- Multi-material is supported.
+  include attributes `normal`, `uv` and `color`.
 
 ### `Model`
 
@@ -79,8 +77,7 @@ const mesh = model.build();
 - This model remains unchanged.
 
 `.build()`
-- Build a `Mesh` from model. The mesh holds a "indexed" `BufferGeoemtry`, its
-  render groups have been grouped by materials; unused materials are plucked.
+- Build a `Mesh` from model. The mesh holds an "indexed" `BufferGeometry`.
 
 ## Credits
 
