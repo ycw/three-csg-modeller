@@ -6,7 +6,7 @@
     "main": "src/index.js",
     "type": "module",
     "scripts": {
-        "build:csg": "terser --source-map url -c -m -o lib/csg.js lib/csg.max.js"
+        "build:csg": "terser --source-map \"url='csg.js.map'\" -c -m -o lib/csg.js lib/csg.max.js"
     },
     "peerDependencies": {
         "three": ">= 0.120.0"
