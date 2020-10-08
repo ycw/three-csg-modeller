@@ -23,7 +23,7 @@ A bare vertex color example.
 
 ## Installation
 
-Via npm ( `npm i ycw/three-csg-modeller#v0.1.2` )
+Via npm ( `npm i ycw/three-csg-modeller#v0.1.3` )
 
 ```js
 import Modeller from "three-csg-modeller"
@@ -32,7 +32,7 @@ import Modeller from "three-csg-modeller"
 Via cdn
 
 ```js
-import Modeller from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.2/src/index.js"
+import Modeller from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.3/src/index.js"
 ```
 
 ## Usage
