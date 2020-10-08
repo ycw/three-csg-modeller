@@ -102,11 +102,8 @@ function csgToMesh(THREE, csg) {
     for (const { vertices, shared: { mI, mesh: { material } } } of polygons) {
         const mat = Array.isArray(material) ? material[mI] : material;
         matMap.has(mat) || matMap.set(mat, []);
-        const vs = matMap.get(mat);
-        for (let i = 1, I = vertices.length - 1; i < I;) {
-            vs.push(vertices[0], vertices[i], vertices[++i]);
-        }
-        vertsCount += (vertices.length - 2) * 3;
+        matMap.get(mat).push(vertices);
+        vertsCount += vertices.length;
     }
 
     // Populate buffer attributes.
@@ -124,7 +121,7 @@ function csgToMesh(THREE, csg) {
     const geom = new THREE.BufferGeometry();
 
     let start = 0;
-    let count = 0;
+    let count = 0; // how many indices a render group contains.
     let positionsIdx = 0;
     let normalsIdx = 0;
     let uvsIdx = 0;
@@ -135,32 +132,49 @@ function csgToMesh(THREE, csg) {
     let hasUv = false;
     let hasColor = false;
 
-    for (const [material, verts] of matMap.entries()) {
+    const indices = []; // holding actual data of element index buffer
+    let index = 0; // index number already used
 
-        for (const { pos, normal, uv, color } of verts) {
-            positions.set([pos.x, pos.y, pos.z], positionsIdx);
-            positionsIdx += 3;
+    for (const [material, vertsArray] of matMap.entries()) {
+        count = 0;
+        for (const verts of vertsArray) {
+            // ---- Process index
+            for (let i = 1, I = verts.length - 1; i < I; ++i) {
+                indices.push(index, index + i, index + i + 1);
+            }
+            index += verts.length;
+            // ---- Populate attributes
+            for (const { pos, normal, uv, color } of verts) {
 
-            hasNormal |= normal !== null;
-            normals.set(normal ? [normal.x, normal.y, normal.z] : [0, 0, 0], normalsIdx);
-            normalsIdx += 3;
+                positions.set([pos.x, pos.y, pos.z], positionsIdx);
+                positionsIdx += 3;
 
-            hasUv |= uv !== null;
-            uvs.set(uv ? uv.toArray() : [0, 0], uvsIdx);
-            uvsIdx += 2;
+                hasNormal |= normal !== null;
+                normals.set(normal ? [normal.x, normal.y, normal.z] : [0, 0, 0], normalsIdx);
+                normalsIdx += 3;
 
-            hasColor |= color !== null;
-            colors.set(color ? [color.x, color.y, color.z] : [0, 0, 0], colorsIdx);
-            colorsIdx += 3;
+                hasUv |= uv !== null;
+                uvs.set(uv ? uv.toArray() : [0, 0], uvsIdx);
+                uvsIdx += 2;
+
+                hasColor |= color !== null;
+                colors.set(color ? [color.x, color.y, color.z] : [0, 0, 0], colorsIdx);
+                colorsIdx += 3;
+            }
+            // ---- Accumulate indices count
+            count += (verts.length - 2) * 3;
         }
-
-        count = verts.length;
         materials.push(material);
         geom.addGroup(start, count, materialIndex);
-
         start += count;
         materialIndex += 1;
     }
+
+    // Set element index buffer.
+
+    geom.index = (index > 65536)
+        ? new THREE.Uint32BufferAttribute(indices, 1)
+        : new THREE.Uint16BufferAttribute(indices, 1);
 
     // Pluck buffer attributes.
 
