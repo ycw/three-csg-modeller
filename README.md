@@ -6,7 +6,7 @@ Solid mesh modeling for three.js.
 
 - Manipulate `BufferGeometry` directly.
 - Support vertex color and mutlimaterial.
-- Dump clean mesh.
+- Dump mesh with indexed `BufferGeometry`.
 
 ## Examples
 
@@ -80,10 +80,9 @@ const mesh = hollow.build();
 - `model` remains unchanged.
 
 `model.build()`
-- Build a `Mesh` from model. The mesh holds `BufferGeoemtry`, which attributes
-  have been sorted by materials; unused materials are plucked; orphan group 
-  in `geometry.groups` is eliminated. Currently, the geometry is always 
-  "non-indexed".
+- Build a `Mesh` from model. The mesh holds a "indexed" `BufferGeoemtry`, its
+  attributes have been sorted by materials; unused materials are plucked; 
+  orphan group in `geometry.groups` is eliminated.
 
 ## Credits
 
