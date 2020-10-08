@@ -2,9 +2,12 @@
 
 A modeller helps to modeling solid mesh for three.js. 
 
-It supports vertex color and multi-material.
+## Featrues
 
-It uses `BufferGeometry` directly.
+- Manipulate `BufferGeometry` directly.
+- Vertex color. (TODO, add ex)
+- Multi-material. (TODO, add ex)
+- Dump clean mesh.
 
 ## Examples
 
@@ -24,7 +27,7 @@ Via cdn
 import Modeller from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.0/src/index.js"
 ```
 
-## Code Example
+## Usage
 
 ```js
 // Construct a modeller.
