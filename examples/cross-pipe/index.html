@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf8">
-    <title>Single Material</title>
+    <title>Cross Pipe</title>
     <link rel="icon" href="#">
     <link rel="stylesheet" href="../index.css">
 </head>
@@ -39,22 +39,29 @@
         // Main
         // ----
 
+        scene.background = new THREE.Color("white");
         camera.position.set(2, 1, 2);
         controls.autoRotate = true;
-
         scene.add(new THREE.HemisphereLight("white", "powderblue"));
 
-        const mat = new THREE.MeshLambertMaterial();
-
-        const meshA = new THREE.Mesh(new THREE.SphereBufferGeometry(0.8), mat);
-        const meshB = new THREE.Mesh(new THREE.BoxBufferGeometry(), mat);
+        const mesh = new THREE.Mesh(
+            new THREE.CylinderBufferGeometry(0.5, 0.5, 1.5),
+            new THREE.MeshLambertMaterial({ color: "lime" })
+        );
 
         const modeller = new Modeller(THREE);
-        const modelA = modeller.model(meshA);
-        const modelB = modeller.model(meshB);
-        const modelC = modelA.intersect(modelB);
-        const meshC = modelC.build();
-        
-        scene.add(meshC);
+        const solidV = modeller.model(mesh); // A
+        mesh.rotation.x = Math.PI/2;
+        const solidH = modeller.model(mesh); // B
+        const solid = solidV.union(solidH); // A | B ... C 
+
+        mesh.scale.set(0.8, 1, 0.8);
+        const innerSolidH = modeller.model(mesh); // D
+        mesh.rotation.x = 0;
+        const innerSolidV = modeller.model(mesh); // E
+        const innerSolid = innerSolidH.union(innerSolidV); // D | E ... F
+
+        const pipe = solid.subtract(innerSolid); // C - F
+        scene.add(pipe.build());
     </script>
 </body>

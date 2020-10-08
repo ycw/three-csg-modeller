@@ -11,7 +11,8 @@ A modeller helps to modeling solid mesh for three.js.
 
 ## Examples
 
-- [Gallery frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame)
+- [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame)
+- [Cross Pipe](https://ycw.github.io/three-csg-modeller/examples/cross-pipe)
 
 ## Installation
 
