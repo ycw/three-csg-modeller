@@ -46,19 +46,21 @@
         scene.add(new THREE.HemisphereLight("white", "powderblue"));
 
         // +----
-        // Demo how to subtract a single-material mesh from a multi-material mesh.
+        // Demo: multi-material mesh.
         // +----
 
-        const mat0 = new THREE.MeshLambertMaterial({ color: "black" });
-        const mat1 = new THREE.MeshLambertMaterial({ color: "white" });
+        const black = new THREE.MeshLambertMaterial({ color: "black" });
+        const white = new THREE.MeshLambertMaterial({ color: "white" });
+        const red = new THREE.MeshLambertMaterial({ color: "red" });
+        const lime = new THREE.MeshLambertMaterial({ color: "lime" });
 
         // A single-material mesh.
-        const meshS = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 2, 0.1), mat0);
+        const meshS = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 2, 0.1), black);
 
         // A multi-material mesh.
         const meshM = new THREE.Mesh(
             new THREE.BoxBufferGeometry(0.9, 1.9, 0.1),
-            [mat0, mat0, mat0, mat0, mat1, mat1]
+            [red, red, lime, lime, white, white]
         );
 
         // Offset multi-material mesh a little bit.
