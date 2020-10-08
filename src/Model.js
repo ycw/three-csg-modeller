@@ -138,14 +138,13 @@ function csgToMesh(THREE, csg) {
     for (const [material, vertsArray] of matMap.entries()) {
         count = 0;
         for (const verts of vertsArray) {
-            // ---- Process index
+            // ---- Populate indices
             for (let i = 1, I = verts.length - 1; i < I; ++i) {
                 indices.push(index, index + i, index + i + 1);
             }
             index += verts.length;
             // ---- Populate attributes
             for (const { pos, normal, uv, color } of verts) {
-
                 positions.set([pos.x, pos.y, pos.z], positionsIdx);
                 positionsIdx += 3;
 
