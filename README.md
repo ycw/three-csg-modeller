@@ -5,13 +5,19 @@ Solid mesh modeling for three.js.
 ## Featrues
 
 - Manipulate `BufferGeometry` directly.
-- Support vertex color and mutlimaterial.
+- Support vertex color and mutli-material.
 - Dump mesh with indexed `BufferGeometry`.
 
 ## Examples
 
-- [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame)
+- [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame) 
+A bare multi-material example.
 - [Cross Pipe](https://ycw.github.io/three-csg-modeller/examples/cross-pipe)
+To demo that re-assigning material will influence subsequent models only.
+- [Extrude Inwards](https://ycw.github.io/three-csg-modeller/examples/extrude-inwards) 
+To show that set-operation methods likes `A.union(B)`, are not commutative in 
+terms of vertex data. I use this "feature" to correct faces uvs w/o touching
+single bit of `attributes.uv.array`. 
 
 ## Installation
 
