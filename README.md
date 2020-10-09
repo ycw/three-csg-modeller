@@ -10,18 +10,10 @@ Solid mesh modeling for three.js.
 
 ## Examples
 
-- [Cross Pipe](https://ycw.github.io/three-csg-modeller/examples/cross-pipe)
-To demo that re-assigning material will influence subsequent models only.
-
-- [Extrude Inwards](https://ycw.github.io/three-csg-modeller/examples/extrude-inwards)
-To show that set-operation methods likes `A.union(B)`, are not commutative. It will 
-pick (and lerp) vertex data of `A` for overlapping faces.
-
-- [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame)
-A multi-material example.
-
-- [Gradient Crown](https://ycw.github.io/three-csg-modeller/examples/gradient-crown)
-A vertex color example.
+- [Gradient Crown](https://ycw.github.io/three-csg-modeller/examples/gradient-crown) (vertex color)
+- [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame) (mutli-material)
+- [Cross Pipe](https://ycw.github.io/three-csg-modeller/examples/cross-pipe) (reassign material)
+- [Extrude Inwards](https://ycw.github.io/three-csg-modeller/examples/extrude-inwards) (set-ops)
 
 ## Installation
 
