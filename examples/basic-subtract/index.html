@@ -50,11 +50,11 @@
 
         const modeller = new Modeller(THREE);
         const sphereModel = modeller.model(new THREE.Mesh(
-            new THREE.SphereBufferGeometry(1),
+            new THREE.SphereBufferGeometry(0.5),
             new THREE.MeshLambertMaterial({ color: "black" })
         ));
         const boxModel = modeller.model(new THREE.Mesh(
-            new THREE.BoxBufferGeometry(1, 1, 2),
+            new THREE.BoxBufferGeometry(0.5, 0.5, 1),
             new THREE.MeshLambertMaterial({ color: "white" })
         ));
         const model = sphereModel.subtract(boxModel);
