@@ -31,22 +31,22 @@ import Modeller from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.6/d
 
 ## Usage
 
-[Live Demo](https://ycw.github.io/three-csg-modeller/examples/basic-subtract)
-
 ```js
 // Demo basic subtraction
 const modeller = new Modeller(THREE);
 const sphereModel = modeller.model(new THREE.Mesh(
-    new THREE.SphereBufferGeometry(0.5),
+  new THREE.SphereBufferGeometry(0.5),
     new THREE.MeshLambertMaterial({ color: "black" })
 ));
 const boxModel = modeller.model(new THREE.Mesh(
-    new THREE.BoxBufferGeometry(0.5, 0.5, 1),
+  new THREE.BoxBufferGeometry(0.5, 0.5, 1),
     new THREE.MeshLambertMaterial({ color: "white" })
 ));
 const model = sphereModel.subtract(boxModel);
 const mesh = model.build();
 ```
+
+Live result: [Basic Subtract](https://ycw.github.io/three-csg-modeller/examples/basic-subtract)
 
 ## API
 
