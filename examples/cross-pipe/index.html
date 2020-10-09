@@ -39,44 +39,55 @@
         // Main
         // ----
 
-        scene.background = new THREE.Color("white");
-        camera.position.set(5, 5, 5);
+        camera.position.set(2, 1, 2);
         controls.autoRotate = true;
-        scene.add(new THREE.HemisphereLight("white", "powderblue"));
+        scene.background = new THREE.Color("white");
+        renderer.shadowMap.enabled = true;
 
-        // +----
-        // Demo: Re-assigning `mesh.material` will influence subsequent models only. 
-        // +----
+        const light = new THREE.DirectionalLight();
+        light.castShadow = true;
+        light.position.set(5, 5, 5);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight("white", 0.5));
 
         const mesh = new THREE.Mesh(
-            new THREE.CylinderBufferGeometry(1, 1, 3),
-            new THREE.MeshLambertMaterial({ color: "black" })
+            new THREE.CylinderBufferGeometry(0.4, 0.4, 1.2),
+            new THREE.MeshLambertMaterial({ color: "cyan" })
         );
 
+        // +----
+        // Modeling
+        // +----
+
         const modeller = new Modeller(THREE);
-       
-        // Make outer cross pipe model. (in black)
-        const modelVerticalPipeOuter = modeller.model(mesh);
-        mesh.rotation.z = Math.PI / 2;
-        const modelHorizontalPipeOuter = modeller.model(mesh);
-        const modelCrossPipeOuter = modelVerticalPipeOuter.union(modelHorizontalPipeOuter);
 
-        // Change mesh material. Note that we are **re-assigning** a new material 
-        // to mesh, this will only affect subsequent models. If we mutate material 
-        // property instead, e.g. `mesh.material.color.set("white")`, then this WILL 
-        // influences models which had been already created.
-        mesh.material = new THREE.MeshLambertMaterial({ color: "white" });
-        
-        // Make inner cross pipe model. (in white)
-        mesh.rotation.z = 0;
-        mesh.scale.set(0.9, 1.0, 0.9);
-        const modelVerticalPipeInner = modeller.model(mesh);
-        mesh.rotation.z = Math.PI / 2;
-        const modelHorizontalPipeInner = modeller.model(mesh);
-        const modelCrossPipeInner = modelVerticalPipeInner.union(modelHorizontalPipeInner);
+        let crossOutModel;
+        {
+            const V = modeller.model(mesh);
+            mesh.rotation.x = Math.PI / 2;
+            const H = modeller.model(mesh);
+            crossOutModel = V.union(H);
+        }
 
-        // Union models.
-        const modelCrossPipe = modelCrossPipeOuter.subtract(modelCrossPipeInner);
-        scene.add(modelCrossPipe.build());
+        let crossInModel;
+        {
+            mesh.material = new THREE.MeshLambertMaterial({ color: "blue" });
+            mesh.rotation.x = 0;
+            mesh.scale.set(0.8, 1.0, 0.8);
+            const V = modeller.model(mesh);
+            mesh.rotation.x = Math.PI / 2;
+            const H = modeller.model(mesh);
+            crossInModel = V.union(H);
+        }
+
+        let crossPipeMesh;
+        {
+            const crossPipe = crossOutModel.subtract(crossInModel);
+            crossPipeMesh = crossPipe.build();
+            crossPipeMesh.castShadow = true;
+            crossPipeMesh.receiveShadow = true;
+        }
+
+        scene.add(crossPipeMesh);
     </script>
 </body>
