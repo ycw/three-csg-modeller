@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf8">
-    <title>Gradient Color</title>
+    <title>Gradient Crown</title>
     <link rel="icon" href="#">
     <link rel="stylesheet" href="../index.css">
 </head>
@@ -47,7 +47,7 @@
         // Demo: use vertex colors.
         // +----
 
-        const colors = new Float32Array(4 * 6 * 3); // 6faces @4verts @3comps
+        const colors = new Float32Array(6 * 4 * 3); // 6faces @4verts @3comps
         // [0, 8) -> red(n,0,0) ... ... +x -x faces are red-ish
         // [8, 16) -> lime(0,n,0) ... ... +y -y faces are green-ish 
         // [16, 24) -> blue(0,0,n) ... ... +z -z faces are blue-ish
@@ -57,25 +57,32 @@
             colors[i * 3 + 2] = (i >= 16 && i < 24) ? Math.abs((i - 16) / 8 - 0.5) * 2 : 0;
         }
 
-        // A mesh with geom attribute `color` and `vertexColors` is set to true.
+        // Has geom attribute `color` and set `vertexColors` to true.
         const geom0 = new THREE.BoxBufferGeometry();
         geom0.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
         const mat0 = new THREE.MeshBasicMaterial({ vertexColors: true });
         const mesh0 = new THREE.Mesh(geom0, mat0);
-        
-        // A mesh without geom attribute `color` but `vertexColors` is set to true.  
-        const geom1 = new THREE.BoxBufferGeometry();
+
+        // Without geom attribute `color` but accidentally set `vertexColors` to true.
+        const geom1 = new THREE.SphereBufferGeometry(0.5);
         const mat1 = new THREE.MeshBasicMaterial({ vertexColors: true });
         const mesh1 = new THREE.Mesh(geom1, mat1);
-        mesh1.scale.set(0.5, 0.5, 1);
+        mesh1.position.set(0.0, -0.5, 0.0);
+ 
+        // Without geom attribute `color` and `material.color` is provided.
+        const geom2 = new THREE.SphereBufferGeometry(0.8);
+        const mat2 = new THREE.MeshBasicMaterial({ color: "lightgray" });
+        const mesh2 = new THREE.Mesh(geom2, mat2);
+        mesh2.position.set(0.0, 0.5, 0.0);
 
         // Create models.
         const modeller = new Modeller(THREE);
-        const model0 = modeller.model(mesh0); 
-        const model1 = modeller.model(mesh1); 
-        const model = model0.subtract(model1);
-       
-        // Result mesh should have gradient-color outer faces and solid black inner faces.
+        const model0 = modeller.model(mesh0);
+        const model1 = modeller.model(mesh1);
+        const model2 = modeller.model(mesh2);
+        const model = model0.subtract(model1).subtract(model2);
+
+        // Build mesh and add it to scene.
         const result = model.build();
         scene.add(result);
     </script>

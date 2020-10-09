@@ -18,10 +18,10 @@ To show that set-operation methods likes `A.union(B)`, are not commutative. It w
 pick (and lerp) vertex data of `A` for overlapping faces.
 
 - [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame) 
-A bare multi-material example.
+A multi-material example.
 
-- [Gradient Color](https://ycw.github.io/three-csg-modeller/examples/gradient-color) 
-A bare vertex color example.
+- [Gradient Crown](https://ycw.github.io/three-csg-modeller/examples/gradient-color) 
+A vertex color example.
 
 ## Installation
 
