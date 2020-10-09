@@ -4,8 +4,8 @@
     "description": "Solid mesh modeling for three.js",
     "repository": "github:ycw/three-csg-modeller",
     "author": "ycw (https://github.com/ycw)",
-    "main": "dist/lib.esm.js",
     "type": "module",
+    "main": "src/index.js",
     "typings": "src/index.d.ts",
     "scripts": {
         "build": "rollup -c rollup.config.js"
