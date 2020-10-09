@@ -41,39 +41,64 @@
 
         camera.position.set(2, 1, 2);
         controls.autoRotate = true;
-
         scene.background = new THREE.Color("white");
         scene.add(new THREE.HemisphereLight("white", "powderblue"));
 
-        // A single-material mesh.
-        const singleMaterialMesh = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(0.5, 1, 0.2),
-            new THREE.MeshLambertMaterial({ color: "black" })
+        const tl = new THREE.TextureLoader();
+        const woodMat = new THREE.MeshLambertMaterial({ map: tl.load("wood.jpg") });
+        const marbleMat = new THREE.MeshLambertMaterial({ map: tl.load("marble.jpg") });
+
+        const boxMesh0 = new THREE.Mesh(
+            new THREE.BoxBufferGeometry(1.6, 0.9, 0.2),
+            woodMat
         );
 
-        // A multi-material mesh.
-        const multiMaterialMesh = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(0.4, 0.9, 0.2), [
-            new THREE.MeshLambertMaterial({ color: "red" }),     // +x
-            new THREE.MeshLambertMaterial({ color: "lime" }),    // -x
-            new THREE.MeshLambertMaterial({ color: "blue" }),    // +y
-            new THREE.MeshLambertMaterial({ color: "cyan" }),    // -y
-            new THREE.MeshLambertMaterial({ color: "magenta" }), // +z
-            new THREE.MeshLambertMaterial({ color: "yellow" })   // -z
-        ]);
-        multiMaterialMesh.position.set(0, 0, 0.1);
+        const boxMesh1 = new THREE.Mesh(
+            new THREE.BoxBufferGeometry(1.5, 0.8, 0.2),
+            [woodMat, woodMat, woodMat, woodMat, marbleMat, marbleMat]
+        );
+
+        let cylinderMesh;
+        {
+            const geom = new THREE.CylinderBufferGeometry(0.25, 0.25, 0.1, 32);
+            geom.rotateX(-Math.PI / 2);
+            geom.translate(0, 0, -0.05);
+            cylinderMesh = new THREE.Mesh(geom, woodMat);
+        }
 
         // +----
         // Modeling
         // +----
 
         const modeller = new Modeller(THREE);
-        const singleMaterialModel = modeller.model(singleMaterialMesh);
-        const multiMaterialModel = modeller.model(multiMaterialMesh);
-        const model = singleMaterialModel.subtract(multiMaterialModel);
+
+        let outerModel;
+        {
+            const A = modeller.model(boxMesh0);
+            boxMesh1.position.set(0, 0, 0.1);
+            const B = modeller.model(boxMesh1);
+            outerModel = A.subtract(B);
+        }
+
+        let innerModel;
+        {
+            innerModel = modeller.model(cylinderMesh);
+        }
+
+        let innerMostModel;
+        {
+            cylinderMesh.scale.set(0.8, 0.8, 1);
+            cylinderMesh.material = woodMat;
+            innerMostModel = innerModel.subtract(modeller.model(cylinderMesh));
+        }
+
+        let frameModel;
+        {
+            frameModel = innerMostModel.union(outerModel.subtract(innerModel));
+        }
 
         // Build mesh and add it to scene.
-        const mesh = model.build();
+        const mesh = frameModel.build();
         scene.add(mesh);
     </script>
 </body>
