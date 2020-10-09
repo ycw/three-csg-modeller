@@ -45,37 +45,35 @@
         scene.background = new THREE.Color("white");
         scene.add(new THREE.HemisphereLight("white", "powderblue"));
 
-        // +----
-        // Demo: multi-material mesh.
-        // +----
-
-        const black = new THREE.MeshLambertMaterial({ color: "black" });
-        const white = new THREE.MeshLambertMaterial({ color: "white" });
-        const red = new THREE.MeshLambertMaterial({ color: "red" });
-        const lime = new THREE.MeshLambertMaterial({ color: "lime" });
-
         // A single-material mesh.
-        const meshS = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 2, 0.1), black);
-
-        // A multi-material mesh.
-        const meshM = new THREE.Mesh(
-            new THREE.BoxBufferGeometry(0.9, 1.9, 0.1),
-            [red, red, lime, lime, white, white]
+        const singleMaterialMesh = new THREE.Mesh(
+            new THREE.BoxBufferGeometry(0.5, 1, 0.2),
+            new THREE.MeshLambertMaterial({ color: "black" })
         );
 
-        // Offset multi-material mesh a little bit.
-        meshM.position.set(0, 0, 0.05);
+        // A multi-material mesh.
+        const multiMaterialMesh = new THREE.Mesh(
+            new THREE.BoxBufferGeometry(0.4, 0.9, 0.2), [
+            new THREE.MeshLambertMaterial({ color: "red" }),     // +x
+            new THREE.MeshLambertMaterial({ color: "lime" }),    // -x
+            new THREE.MeshLambertMaterial({ color: "blue" }),    // +y
+            new THREE.MeshLambertMaterial({ color: "cyan" }),    // -y
+            new THREE.MeshLambertMaterial({ color: "magenta" }), // +z
+            new THREE.MeshLambertMaterial({ color: "yellow" })   // -z
+        ]);
+        multiMaterialMesh.position.set(0, 0, 0.1);
 
-        // Now create models.
+        // +----
+        // Modeling
+        // +----
+
         const modeller = new Modeller(THREE);
-        const modelS = modeller.model(meshS); 
-        const modelM = modeller.model(meshM);
-
-        // Subtract a model from another model.
-        const model = modelS.subtract(modelM);
+        const singleMaterialModel = modeller.model(singleMaterialMesh);
+        const multiMaterialModel = modeller.model(multiMaterialMesh);
+        const model = singleMaterialModel.subtract(multiMaterialModel);
 
         // Build mesh and add it to scene.
-        const mesh = model.build(); 
+        const mesh = model.build();
         scene.add(mesh);
     </script>
 </body>
