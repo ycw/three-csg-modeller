@@ -12,12 +12,14 @@ Solid mesh modeling for three.js.
 
 - [Cross Pipe](https://ycw.github.io/three-csg-modeller/examples/cross-pipe)
 To demo that re-assigning material will influence subsequent models only.
+
 - [Extrude Inwards](https://ycw.github.io/three-csg-modeller/examples/extrude-inwards) 
-To show that set-operation methods likes `A.union(B)`, are not commutative in 
-terms of vertex data. I use this "feature" to correct faces uvs w/o touching
-single bit of `attributes.uv.array`. 
+To show that set-operation methods likes `A.union(B)`, are not commutative. It will 
+pick (and lerp) vertex data of `A` for overlapping faces.
+
 - [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame) 
 A bare multi-material example.
+
 - [Gradient Color](https://ycw.github.io/three-csg-modeller/examples/gradient-color) 
 A bare vertex color example.
 
@@ -56,25 +58,25 @@ const mesh = model.build();
 ### `Modeller`
 
 `.model(mesh)`
-- Construct a model from `mesh`, return a `Model` instance.
-- Input `mesh` must hold a `BufferGeometry` instead of `Geometry`. That 
-  `BufferGeometry` must contain attribute `position` and may optionally
-  include attributes `normal`, `uv` and `color`.
+- Construct a model from a `THREE.Mesh`, it returns a `Model` instance.
+- The param `mesh` must hold a `BufferGeometry` instead of `Geometry`. That 
+  `BufferGeometry` must have `attributes.position` provided. Others supported
+  attributes are `normal`, `uv` and `color`.
 
 ### `Model`
 
 `.union(modelB)`
-- Returns a new model holding result of this model `|` modelB.
+- Return a new model holding result of this model `|` modelB.
 
 `.subtract(modelB)`
-- Returns a new model holding result of this model `-` modelB.
+- Return a new model holding result of this model `-` modelB.
 
 `.intersect(modelB)`
-- Returns a new model holding result of this model `&` modelB.
+- Return a new model holding result of this model `&` modelB.
 
 `.applyMatrix4(matrix)` 
-- Returns a new model holding the transformed one. 
-- This model remains unchanged.
+- `matrix` is a `THREE.Matrix4`.
+- Return a new transformed model.
 
 `.build()`
 - Build a `Mesh` from model. The mesh holds an "indexed" `BufferGeometry`.
