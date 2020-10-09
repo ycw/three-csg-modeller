@@ -45,8 +45,6 @@
 
         // +----
         // Demo: Extrude inwards; correcting uvs by only using set operation methods.
-        // Note that these methods are not commutative. The resulting geometry of 
-        // `A.union(B)` and `B.union(A)` is same, but resulting vertex data are different.
         // +----
 
         // Create video textured material which will be applied to +z faces.
@@ -62,9 +60,9 @@
 
         // Create box mesh.
         const boxMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(), [
-            normalMat, normalMat,
-            normalMat, normalMat,
-            videoMat, normalMat,
+            normalMat, normalMat, // +x -x 
+            normalMat, normalMat, // +y -y
+            videoMat, normalMat   // +z -z
         ]);
 
         // Create models.
@@ -75,11 +73,11 @@
         const model2 = model0.intersect(model1);
         const model3 = model0.subtract(model2);
         const model2b = model2.applyMatrix4(new THREE.Matrix4().makeTranslation(0.0, 0.0, -0.5));
-        const model4 = model2b.union(model3); 
+        const model4 = model2b.union(model3);
 
         // Build mesh.
         const mesh = model4.build();
-        mesh.scale.set(1, 16 / 9, 1);
+        mesh.scale.set(9 / 16, 1, 1);
         scene.add(mesh);
     </script>
 </body>
