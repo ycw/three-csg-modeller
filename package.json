@@ -10,19 +10,19 @@
     "scripts": {
         "build": "rollup -c rollup.config.js"
     },
-    "peerDependencies": {
-        "three": ">= 0.120.0"
-    },
     "license": "MIT",
     "keywords": [
         "CSG",
-        "modeling"
+        "modeling",
+        "threejs"
     ],
     "files": [
         "lib",
-        "src",
-        "dist"
+        "src"
     ],
+    "peerDependencies": {
+        "three": ">= 0.120.0"
+    },
     "devDependencies": {
         "rollup": "^2.29.0",
         "rollup-plugin-terser": "^7.0.2",
