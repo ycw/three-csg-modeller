@@ -2,11 +2,13 @@
     "name": "three-csg-modeller",
     "version": "0.1.4",
     "description": "Solid mesh modeling for three.js",
+    "repository": "github:ycw/three-csg-modeller",
     "author": "ycw (https://github.com/ycw)",
-    "main": "src/index.js",
+    "main": "dist/lib.esm.js",
     "type": "module",
+    "typings": "src/index.d.ts",
     "scripts": {
-        "build:csg": "cd lib && terser --source-map \"url='csg.js.map'\" -c -m -o csg.js csg.max.js"
+        "build": "rollup -c rollup.config.js"
     },
     "peerDependencies": {
         "three": ">= 0.120.0"
@@ -16,11 +18,15 @@
         "CSG",
         "modeling"
     ],
-    "devDependencies": {
-        "terser": "^5.3.4"
-    },
     "files": [
         "lib",
-        "src"
-    ]
+        "src",
+        "dist"
+    ],
+    "devDependencies": {
+        "rollup": "^2.29.0",
+        "rollup-plugin-terser": "^7.0.2",
+        "terser": "^5.3.4"
+    },
+    "dependencies": {}
 }
