@@ -1,6 +1,6 @@
 {
     "name": "three-csg-modeller",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "description": "Solid mesh modeling for three.js",
     "repository": "github:ycw/three-csg-modeller",
     "author": "ycw (https://github.com/ycw)",
