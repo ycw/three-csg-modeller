@@ -39,15 +39,16 @@ import Modeller from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.6/d
 
 ## Usage
 
+[Live Demo](https://ycw.github.io/three-csg-modeller/examples/basic-subtract)
 ```js
 const modeller = new Modeller(THREE);
 const sphereModel = modeller.model(new THREE.Mesh(
     new THREE.SphereBufferGeometry(1),
-    new THREE.MeshBasicMaterial({ color: "red" })
+    new THREE.MeshLambertMaterial({ color: "black" })
 ));
 const boxModel = modeller.model(new THREE.Mesh(
     new THREE.BoxBufferGeometry(1, 1, 2),
-    new THREE.MeshBasicMaterial({ color: "blue" })
+    new THREE.MeshLambertMaterial({ color: "white" })
 ));
 const model = sphereModel.subtract(boxModel);
 const mesh = model.build();
