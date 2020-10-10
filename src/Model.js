@@ -164,9 +164,9 @@ function csgToMesh(THREE, csg) {
     let uvsIdx = 0;
     let colorsIdx = 0;
 
-    let someHasNormal = false;
-    let someHasUv = false;
-    let someHasColor = false;
+    let someHasNormal; // truthy/falsy;
+    let someHasUv;     // ditto
+    let someHasColor;  // ditto
 
     const indices = []; // holding actual data of element index buffer
     let index = 0; // index number already used
@@ -190,7 +190,7 @@ function csgToMesh(THREE, csg) {
                 positions[positionsIdx++] = pos.z;
                 
                 // `normal`
-                someHasNormal ||= normal;
+                someHasNormal || (someHasNormal = normal);
                 if (normal) {
                     normals[normalsIdx++] = normal.x;
                     normals[normalsIdx++] = normal.y;
@@ -201,7 +201,7 @@ function csgToMesh(THREE, csg) {
                 }
 
                 // `uv`
-                someHasUv ||= uv;
+                someHasUv || (someHasUv = uv);
                 if (uv) {
                     uvs[uvsIdx++] = uv.x;
                     uvs[uvsIdx++] = uv.y;
@@ -211,7 +211,7 @@ function csgToMesh(THREE, csg) {
                 }
 
                 // `color`
-                someHasColor ||= color;
+                someHasColor || (someHasColor = color);
                 if (color) {
                     colors[colorsIdx++] = color.x;
                     colors[colorsIdx++] = color.y;
