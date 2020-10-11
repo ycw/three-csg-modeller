@@ -12,7 +12,6 @@ Solid mesh modeling for three.js.
 
 - [Gradient Crown](https://ycw.github.io/three-csg-modeller/examples/gradient-crown/) (vertex color)
 - [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame/) (mutli-material)
-- [Cross Pipe](https://ycw.github.io/three-csg-modeller/examples/cross-pipe/) (reassign material)
 - [Extrude Inwards](https://ycw.github.io/three-csg-modeller/examples/extrude-inwards/) (set operations)
 
 ## Installation
@@ -46,9 +45,7 @@ const model = sphereModel.subtract(boxModel);
 const mesh = model.build();
 ```
 
-Live result: [Basic Subtract](https://ycw.github.io/three-csg-modeller/examples/basic-subtract/)
-
-See also: [Basic Multi-Material](https://ycw.github.io/three-csg-modeller/examples/basic-multi-material/)
+Live result: [Basic Subtract](https://ycw.github.io/three-csg-modeller/examples/basic-subtract/). See also: [Basic Multi-Material](https://ycw.github.io/three-csg-modeller/examples/basic-multi-material/).
 
 ## API
 
