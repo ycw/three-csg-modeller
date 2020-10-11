@@ -1,0 +1,81 @@
+<!doctype html>
+
+<head>
+    <meta charset="utf8">
+    <title>Basic Multi-Material</title>
+    <link rel="icon" href="#">
+    <link rel="stylesheet" href="../index.css">
+</head>
+
+<body>
+    <script type="module">
+        import * as THREE from "https://unpkg.com/three@0.121.1/build/three.module.js"
+        import { OrbitControls } from "https://unpkg.com/three@0.121.1/examples/jsm/controls/OrbitControls"
+        import Modeller from "../../src/index.js";
+
+        // ----
+        // Boot
+        // ----
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, 2, .1, 100);
+        const controls = new OrbitControls(camera, renderer.domElement);
+        window.addEventListener('resize', () => {
+            const { clientWidth, clientHeight } = renderer.domElement;
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(clientWidth, clientHeight, false);
+            camera.aspect = clientWidth / clientHeight;
+            camera.updateProjectionMatrix();
+        });
+        document.body.prepend(renderer.domElement);
+        window.dispatchEvent(new Event('resize'));
+        renderer.setAnimationLoop(() => {
+            renderer.render(scene, camera);
+            controls.update();
+        });
+
+        // ----
+        // Main
+        // ----
+
+        camera.position.set(2, 0, 2);
+        controls.autoRotate = true;
+        scene.background = new THREE.Color("white");
+        scene.add(new THREE.HemisphereLight("white", "powderblue"));
+
+        // +----
+        // Modeling
+        // +----
+
+        const modeller = new Modeller(THREE);
+
+        let sphereModel;
+        {
+            const sphereMesh = new THREE.Mesh(new THREE.SphereBufferGeometry(0.5), [
+                new THREE.MeshLambertMaterial({ color: "black" }),
+                new THREE.MeshLambertMaterial({ color: "white" })
+            ]);
+            sphereMesh.geometry.addGroup(0, 120, 0);
+            sphereMesh.geometry.addGroup(120, 120, 1);
+            sphereModel = modeller.model(sphereMesh);
+        }
+
+        let boxModel;
+        {
+            const boxMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(0.8, 0.8, 0.8), [
+                new THREE.MeshLambertMaterial({ color: "red" }),
+                new THREE.MeshLambertMaterial({ color: "lime" }),
+                new THREE.MeshLambertMaterial({ color: "blue" }),
+                new THREE.MeshLambertMaterial({ color: "cyan" }),
+                new THREE.MeshLambertMaterial({ color: "magenta" }),
+                new THREE.MeshLambertMaterial({ color: "yellow" }),
+            ]);
+            boxModel = modeller.model(boxModel);
+        }
+
+        const model = sphereModel.subtract(boxModel);
+        const mesh = model.build();
+        scene.add(mesh);
+    </script>
+</body>
