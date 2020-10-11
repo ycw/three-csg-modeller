@@ -10,10 +10,10 @@ Solid mesh modeling for three.js.
 
 ## Examples
 
-- [Gradient Crown](https://ycw.github.io/three-csg-modeller/examples/gradient-crown) (vertex color)
-- [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame) (mutli-material)
-- [Cross Pipe](https://ycw.github.io/three-csg-modeller/examples/cross-pipe) (reassign material)
-- [Extrude Inwards](https://ycw.github.io/three-csg-modeller/examples/extrude-inwards) (set-ops)
+- [Gradient Crown](https://ycw.github.io/three-csg-modeller/examples/gradient-crown/) (vertex color)
+- [Gallery Frame](https://ycw.github.io/three-csg-modeller/examples/gallery-frame/) (mutli-material)
+- [Cross Pipe](https://ycw.github.io/three-csg-modeller/examples/cross-pipe/) (reassign material)
+- [Extrude Inwards](https://ycw.github.io/three-csg-modeller/examples/extrude-inwards/) (set operations)
 
 ## Installation
 
@@ -32,49 +32,48 @@ import Modeller from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.8/d
 ## Usage
 
 ```js
-// Demo basic subtraction
+// Ex. Subtract a sphere from a box.
 const modeller = new Modeller(THREE);
 const sphereModel = modeller.model(new THREE.Mesh(
   new THREE.SphereBufferGeometry(0.5),
-    new THREE.MeshLambertMaterial({ color: "black" })
+  new THREE.MeshLambertMaterial({ color: "black" })
 ));
 const boxModel = modeller.model(new THREE.Mesh(
   new THREE.BoxBufferGeometry(0.5, 0.5, 1),
-    new THREE.MeshLambertMaterial({ color: "white" })
+  new THREE.MeshLambertMaterial({ color: "white" })
 ));
 const model = sphereModel.subtract(boxModel);
 const mesh = model.build();
 ```
 
-Live result: [Basic Subtract](https://ycw.github.io/three-csg-modeller/examples/basic-subtract)
+Live result: [Basic Subtract](https://ycw.github.io/three-csg-modeller/examples/basic-subtract/)
+
+See also: [Basic Multi-Material](https://ycw.github.io/three-csg-modeller/examples/basic-multi-material/)
 
 ## API
 
 ### `Modeller`
 
 `.model(mesh)`
-- Construct a model from a `THREE.Mesh`, it returns a `Model` instance.
-- The param `mesh` must hold a `BufferGeometry` instead of `Geometry`. That 
-  `BufferGeometry` must have `attributes.position` provided. Others supported
-  attributes are `normal`, `uv` and `color`.
+- Create a `Model` instance from a mesh.
+- The `mesh` must hold a `BufferGeometry`.
 
 ### `Model`
 
-`.union(modelB)`
-- Return a new model holding result of this model `|` modelB.
+`.union(model)`
+- Return a new model holding result of `this` &cup; `model`.
 
-`.subtract(modelB)`
-- Return a new model holding result of this model `-` modelB.
+`.subtract(model)`
+- Return a new model holding result of `this` &minus; `model`.
 
-`.intersect(modelB)`
-- Return a new model holding result of this model `&` modelB.
+`.intersect(model)`
+- Return a new model holding result of `this` &cap; `model`.
 
 `.applyMatrix4(matrix)` 
-- `matrix` is a `THREE.Matrix4`.
-- Return a new transformed model.
+- Return a new transformed model. Param `matrix` is a `THREE.Matrix4`.
 
 `.build()`
-- Build a `Mesh` from model. The mesh holds an "indexed" `BufferGeometry`.
+- Build a mesh from model. The mesh holds an indexed `BufferGeometry`.
 
 ## Credits
 
