@@ -71,7 +71,7 @@
                 new THREE.MeshLambertMaterial({ color: "magenta" }),
                 new THREE.MeshLambertMaterial({ color: "yellow" }),
             ]);
-            boxModel = modeller.model(boxModel);
+            boxModel = modeller.model(boxMesh);
         }
 
         const model = sphereModel.subtract(boxModel);
