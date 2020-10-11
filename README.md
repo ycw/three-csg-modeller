@@ -31,7 +31,7 @@ import Modeller from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.8/d
 ## Usage
 
 ```js
-// Ex. Subtract a sphere from a box.
+// Ex. Subtract a box from a sphere.
 const modeller = new Modeller(THREE);
 const sphereModel = modeller.model(new THREE.Mesh(
   new THREE.SphereBufferGeometry(0.5),
@@ -52,8 +52,7 @@ Live result: [Basic Subtract](https://ycw.github.io/three-csg-modeller/examples/
 ### `Modeller`
 
 `.model(mesh)`
-- Create a `Model` instance from a mesh.
-- The `mesh` must hold a `BufferGeometry`.
+- Create a `Model` instance from a mesh whose `.geometry` must be a `BufferGeometry`.
 
 ### `Model`
 
@@ -70,7 +69,7 @@ Live result: [Basic Subtract](https://ycw.github.io/three-csg-modeller/examples/
 - Return a new transformed model. Param `matrix` is a `THREE.Matrix4`.
 
 `.build()`
-- Build a mesh from model. The mesh holds an indexed `BufferGeometry`.
+- Build and return a mesh holding an indexed `BufferGeometry`.
 
 ## Credits
 
