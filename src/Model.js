@@ -80,42 +80,35 @@ function meshToPolygons(THREE, mesh) {
     const uvs = uv && uv.array;
     const colors = color && color.array;
     const indices = mesh.geometry.index && mesh.geometry.index.array;
-    const groups = mesh.geometry.groups;
-    const vertexCount = indices ? indices.length : positions.length / 3;
+    const count = indices ? indices.length : positions.length / 3;
 
-    // Loop through vertices to create `CSG.Polygon` for each 3-vertices.
-    // - Each `CSG.Polygon` contains `CSG.Vertex[]` and a `THREE.Material`.
-    // - A `CSG.Vertex` must contain `.pos` (CSG.Vector) and optionally include 
+    // Populate polygons; create `CSG.Polygon` for each 3-vertices.
+    // - `CSG.Polygon` contains `CSG.Vertex[]` and `THREE.Material`.
+    // - `CSG.Vertex` must contain `.pos` (CSG.Vector) and optionally include 
     //   `normal` (CSG.Vector), `uv` (THREE.Vector2) and `color` (CSG.Vector). 
 
-    for (let i = 0; i < vertexCount; i += 3) {
-        const vertices = [];
-        for (let j = 0; j < 3; ++j) {
-            const n = indices ? indices[i + j] : i + j;
-            vertices.push(new CSG.Vertex(
-                shouldApplyMatrix
-                    ? new THREE.Vector3().fromArray(positions, 3 * n).applyMatrix4(matrix)
-                    : positions.subarray(3 * n, 3 * n + 3),
-                normals && normals.subarray(3 * n, 3 * n + 3),
-                uvs && new THREE.Vector2().fromArray(uvs, 2 * n),
-                colors && colors.subarray(3 * n, 3 * n + 3)
-            ));
-        }
+    const groups = Array.isArray(mesh.material)
+        ? mesh.geometry.groups
+        : [{ start: 0, count, materialIndex: 0 }];
 
-        // Probing `Material` from `geom.groups` only makes sense if `mesh.material` is an array.
-        if (Array.isArray(mesh.material)) {
-            let material;
-            for (const { start, count, materialIndex } of groups) {
-                if (i >= start && i < start + count) {
-                    material = mesh.material[materialIndex];
-                    break;
-                }
+    for (const { start, count, materialIndex } of groups) {
+        const material = Array.isArray(mesh.material) 
+            ? mesh.material[materialIndex]
+            : mesh.material; 
+        for (let i = start; i < start + count; i += 3) {
+            const vertices = [];
+            for (let j = 0; j < 3; ++j) {
+                const n = indices ? indices[i + j] : i + j;
+                vertices.push(new CSG.Vertex(
+                    shouldApplyMatrix
+                        ? new THREE.Vector3().fromArray(positions, 3 * n).applyMatrix4(matrix)
+                        : positions.subarray(3 * n, 3 * n + 3),
+                    normals && normals.subarray(3 * n, 3 * n + 3),
+                    uvs && new THREE.Vector2().fromArray(uvs, 2 * n),
+                    colors && colors.subarray(3 * n, 3 * n + 3)
+                ));
             }
             polygons.push(new CSG.Polygon(vertices, material));
-        }
-        else {
-            // `mesh.material` is a single `Material`, it's safe to ignore `groups`.
-            polygons.push(new CSG.Polygon(vertices, mesh.material));
         }
     }
 
@@ -129,7 +122,7 @@ function meshToPolygons(THREE, mesh) {
 // BufferGeometry which buffer attributes are sorted by `Material`.
 // 
 function csgToMesh(THREE, csg) {
-    
+
     // Group vertices by `Material` and find vertex count in same loop. 
     const polygons = csg.toPolygons();
     const matMap = new Map(); // Map<Material{}, CSG.Vertex[][]>
@@ -150,11 +143,13 @@ function csgToMesh(THREE, csg) {
     const uvs = new Float32Array(vertexCount * 2);
     const colors = new Float32Array(vertexCount * 3);
 
-    // Populate `.attributes`, `.index`, `.groups` and `mesh.material` in same loop.
+    // Result mesh.
     const geom = new THREE.BufferGeometry();
     const materials = [];
     const mesh = new THREE.Mesh(geom, materials);
-
+    
+    // Populate geometry (`geom.attributes`, `geom.index`, `geom.groups`) and 
+    // meterials (`mesh.material`) in same loop.
     let start = 0;
     let count = 0; // indices count of the current render group.
     let materialIndex = 0;
@@ -188,7 +183,7 @@ function csgToMesh(THREE, csg) {
                 positions[positionsIdx++] = pos.x;
                 positions[positionsIdx++] = pos.y;
                 positions[positionsIdx++] = pos.z;
-                
+
                 // `normal`
                 someHasNormal || (someHasNormal = normal);
                 if (normal) {
