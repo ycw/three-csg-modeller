@@ -92,9 +92,9 @@ function meshToPolygons(THREE, mesh) {
         : [{ start: 0, count, materialIndex: 0 }];
 
     for (const { start, count, materialIndex } of groups) {
-        const material = Array.isArray(mesh.material) 
+        const material = Array.isArray(mesh.material)
             ? mesh.material[materialIndex]
-            : mesh.material; 
+            : mesh.material;
         for (let i = start; i < start + count; i += 3) {
             const vertices = [];
             for (let j = 0; j < 3; ++j) {
@@ -147,7 +147,7 @@ function csgToMesh(THREE, csg) {
     const geom = new THREE.BufferGeometry();
     const materials = [];
     const mesh = new THREE.Mesh(geom, materials);
-    
+
     // Populate geometry (`geom.attributes`, `geom.index`, `geom.groups`) and 
     // meterials (`mesh.material`) in same loop.
     let start = 0;
