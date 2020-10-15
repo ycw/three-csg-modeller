@@ -11,7 +11,7 @@
     <script type="module">
         import * as THREE from "https://unpkg.com/three@0.121.1/build/three.module.js"
         import { OrbitControls } from "https://unpkg.com/three@0.121.1/examples/jsm/controls/OrbitControls"
-        import { Modeller } from "../../src/index.js";
+        import { CSGModeller } from "../../src/index.js";
 
         // ----
         // Boot
@@ -48,7 +48,7 @@
         // Modeling
         // +----
 
-        const modeller = new Modeller(THREE);
+        const modeller = new CSGModeller(THREE);
 
         let sphereModel;
         {

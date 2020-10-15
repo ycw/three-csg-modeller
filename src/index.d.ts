@@ -1,7 +1,7 @@
 import * as THREE from "three"
 import { Model } from "./Model"
 
-declare export class Modeller {
+declare export class CSGModeller {
 
     /**
      * Construct a `Modeller`. Please inject the three.js library like the following:

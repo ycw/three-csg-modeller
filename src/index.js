@@ -1,6 +1,6 @@
 import { Model } from "./Model.js"
 
-export class Modeller {
+export class CSGModeller {
 
     constructor(THREE) {
         this._THREE = THREE;
