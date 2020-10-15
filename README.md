@@ -49,7 +49,10 @@ Live result: [Basic Subtract](https://ycw.github.io/three-csg-modeller/examples/
 
 ## API
 
-### `Modeller`
+### `CSGModeller`
+
+`new CSGModeller(THREE)`
+- Construct a modeller. `THREE` is the three.js lib.
 
 `.model(mesh)`
 - Create a `Model` instance from a mesh whose `.geometry` must be a `BufferGeometry`.
