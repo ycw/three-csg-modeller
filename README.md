@@ -16,23 +16,23 @@ Solid mesh modeling for three.js.
 
 ## Installation
 
-Via npm ( `npm i ycw/three-csg-modeller#v0.1.9` )
+Via npm ( `npm i ycw/three-csg-modeller#v0.1.10` )
 
 ```js
-import { Modeller } from "three-csg-modeller"
+import { CSGModeller } from "three-csg-modeller"
 ```
 
 Via cdn
 
 ```js
-import { Modeller } from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.9/dist/lib.esm.js"
+import { CSGModeller } from "https://cdn.jsdelivr.net/gh/ycw/three-csg-modeller@0.1.10/dist/lib.esm.js"
 ```
 
 ## Usage
 
 ```js
 // Ex. Subtract a box from a sphere.
-const modeller = new Modeller(THREE);
+const modeller = new CSGModeller(THREE);
 const sphereModel = modeller.model(new THREE.Mesh(
   new THREE.SphereBufferGeometry(0.5),
   new THREE.MeshLambertMaterial({ color: "black" })
