@@ -1,6 +1,6 @@
-import Model from "./Model.js"
+import { Model } from "./Model.js"
 
-export default class Modeller {
+export class Modeller {
 
     constructor(THREE) {
         this._THREE = THREE;

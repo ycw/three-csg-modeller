@@ -1,7 +1,7 @@
 import * as THREE from "three"
-import CSG from "../lib/csg.max"
+import { CSG } from "../lib/csg"
 
-declare export default class Model {
+declare export class Model {
 
     /**
      * Construct a Model. 

@@ -1,6 +1,6 @@
-import CSG from "../lib/csg.js"
+import { CSG } from "../lib/csg.js"
 
-export default class Model {
+export class Model {
 
     constructor(THREE) {
         this._THREE = THREE;
